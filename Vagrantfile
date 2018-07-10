@@ -14,10 +14,10 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "centos/7"
 
-  # Setup for multiple hosts
+  # Setup for twim web servers and a load balancer
   config.vm.define "apache1" do |apache1|
     apache1.vm.hostname = "centos71"
-    apache1.vm.network "forwarded_port", guest: 80, host: 8181
+  # apache1.vm.network "forwarded_port", guest: 80, host: 8181
     apache1.vm.network "private_network", ip: "192.168.1.101"
     apache1.vm.synced_folder "data", "/vagrant"
     apache1.vm.provision "shell", path: "httpdconfig.sh"
@@ -25,10 +25,18 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "apache2" do |apache2|
     apache2.vm.hostname = "centos72"
-    apache2.vm.network "forwarded_port", guest: 80, host: 8282
+  # apache2.vm.network "forwarded_port", guest: 80, host: 8282
     apache2.vm.network "private_network", ip: "192.168.1.102"
     apache2.vm.synced_folder "data", "/vagrant"
     apache2.vm.provision "shell", path: "httpdconfig.sh"
+  end
+
+  config.vm.define "haproxy" do |haproxy|
+    haproxy.vm.hostname = "haproxy"
+    haproxy.vm.network "forwarded_port", guest: 80, host: 8383
+    haproxy.vm.network "private_network", ip: "192.168.1.103"
+    haproxy.vm.synced_folder "data", "/vagrant"
+    haproxy.vm.provision "shell", path: "haproxyconfig.sh"
   end
 
   # Disable automatic box update checking. If you disable this, then

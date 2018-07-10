@@ -14,6 +14,7 @@ yum install -y httpd
 #
 cp /vagrant/index.html /var/www/html/
 #
-# Start Apache
+# Configure and start the Apache service
 #
+chkconfig httpd on
 service httpd start
